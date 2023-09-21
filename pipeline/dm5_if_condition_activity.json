@@ -1,0 +1,116 @@
+{
+	"name": "dm5_if_condition_activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata Last Modified Date",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "InternetSale",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"lastModified",
+						"size",
+						"itemName"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Lookup Last Execution Date",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata Last Modified Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[dbo].[usp_LastLoadDate]",
+						"storedProcedureParameters": {
+							"Name": {
+								"type": "String",
+								"value": {
+									"value": "@activity('Get Metadata Last Modified Date').output.itemName",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerInsert",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "If Condition Test Date",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Lookup Last Execution Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greaterOrEquals(\n    addhours(\n        formatDateTime(\n            activity('Get Metadata Last Modified Date').output.lastModified, 'o'\n        ), -4\n    ), activity('Lookup Last Execution Date').output.firstRow.ExecutionDate\n)",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "False",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 5
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "internetSale"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-17T07:37:17Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

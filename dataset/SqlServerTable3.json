@@ -1,0 +1,17 @@
+{
+	"name": "SqlServerTable3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Link_Acterys",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "OLAP",
+			"table": "SPVB_Ending_Price"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

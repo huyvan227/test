@@ -1,0 +1,24 @@
+{
+	"name": "trigger_etl_Adventure_Work_daily",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "ETL_Adventure_Work",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-05-25T17:06:00",
+				"timeZone": "SE Asia Standard Time"
+			}
+		}
+	}
+}

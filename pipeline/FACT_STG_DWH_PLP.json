@@ -1,0 +1,63 @@
+{
+	"name": "FACT_STG_DWH_PLP",
+	"properties": {
+		"activities": [
+			{
+				"name": "SIL FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SIL_FACT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@pipeline().parameters.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "PLP FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SIL FACT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PLP_FACT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@pipeline().parameters.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"BATCH_ID": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_anhle"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-10T08:08:00Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

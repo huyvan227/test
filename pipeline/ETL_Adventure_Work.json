@@ -1,0 +1,86 @@
+{
+	"name": "ETL_Adventure_Work",
+	"properties": {
+		"activities": [
+			{
+				"name": "SIL_DIM",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SDE_DIM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "load_data_from_STG_DIM",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SIL_FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SIL_DIM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "load_data_from_STG_FACT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SDE_FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "load_FACT_data_from_job_SaleLT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SDE_DIM",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SDE_FACT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "load_DIM_data_from_job_SaleLT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"folder": {
+			"name": "AdventureWork"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-25T07:24:51Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

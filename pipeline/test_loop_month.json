@@ -1,0 +1,137 @@
+{
+	"name": "test_loop_month",
+	"properties": {
+		"activities": [
+			{
+				"name": "Until1",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(formatDateTime(variables('cur_month')), formatDateTime(pipeline().parameters.TO_MONTH))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "cur_month incre",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "ssc_sde_pipeline",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tmp",
+								"value": {
+									"value": "@addToTime(variables('cur_month'), 1, 'Month')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "cur_month incre",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "cur_month",
+								"value": {
+									"value": "@variables('tmp')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "ssc_sde_pipeline",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "ssc_sde_pipeline",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"MONTH": {
+										"value": "@substring(variables('cur_month'), 0, 7)",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "cur_month",
+					"value": {
+						"value": "@formatDateTime(pipeline().parameters.FROM_MONTH)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"FROM_MONTH": {
+				"type": "string",
+				"defaultValue": "2023-01"
+			},
+			"TO_MONTH": {
+				"type": "string",
+				"defaultValue": "2023-08"
+			}
+		},
+		"variables": {
+			"cur_month": {
+				"type": "String"
+			},
+			"tmp": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "DC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-08T11:47:56Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

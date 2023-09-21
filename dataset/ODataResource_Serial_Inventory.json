@@ -1,0 +1,19 @@
+{
+	"name": "ODataResource_Serial_Inventory",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OData_linked_service_Serial_Inventory",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SS Group Dataset"
+		},
+		"annotations": [],
+		"type": "ODataResource",
+		"schema": [],
+		"typeProperties": {
+			"path": "SerialInventoryItemSerialStatusCollection"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

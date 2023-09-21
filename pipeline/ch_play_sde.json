@@ -1,0 +1,615 @@
+{
+	"name": "ch_play_sde",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "search_job",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('search_job').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "lnd",
+							"type": "AzureFunctionActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"functionName": "getFileGooglePlayTrigger",
+								"method": "GET"
+							},
+							"linkedServiceName": {
+								"referenceName": "pyAPIVCB",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "count_line",
+							"description": "If exist table, skip header csv",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "lnd",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "SELECT COUNT(*) FROM @{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "DC_azdcdb",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema": "1",
+										"table": "1"
+									}
+								}
+							}
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "count_line",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(int(activity('count_line').output.firstRow['']), 0)",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "sde_without_header",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "DelimitedTextSource",
+												"additionalColumns": [
+													{
+														"name": "W_BATCH_ID",
+														"value": {
+															"value": "@pipeline().parameters.BATCH_ID",
+															"type": "Expression"
+														}
+													},
+													{
+														"name": "W_DATASOURCE_NAME",
+														"value": "CHP"
+													},
+													{
+														"name": "W_UPDATE_DT",
+														"value": {
+															"value": "@addhours(utcnow(),7)",
+															"type": "Expression"
+														}
+													},
+													{
+														"name": "W_FILE_PATH",
+														"value": "$$FILEPATH"
+													}
+												],
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true,
+													"wildcardFolderPath": {
+														"value": "@{item().PATH}",
+														"type": "Expression"
+													},
+													"wildcardFileName": {
+														"value": "@{item().SOURCE_TABLE}*.csv",
+														"type": "Expression"
+													},
+													"enablePartitionDiscovery": false
+												},
+												"formatSettings": {
+													"type": "DelimitedTextReadSettings",
+													"skipLineCount": 1
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink",
+												"preCopyScript": {
+													"value": "IF OBJECT_ID('@{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}') IS NOT NULL\n\tTRUNCATE TABLE @{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}",
+													"type": "Expression"
+												},
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false,
+												"tableOption": "autoCreate",
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"mappings": [
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 1
+														},
+														"sink": {
+															"name": "Date",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 2
+														},
+														"sink": {
+															"name": "Package Name",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 3
+														},
+														"sink": {
+															"name": "Daily Device Installs",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 4
+														},
+														"sink": {
+															"name": "Daily Device Uninstalls",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 5
+														},
+														"sink": {
+															"name": "Daily Device Upgrades",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 6
+														},
+														"sink": {
+															"name": "Total User Installs",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 7
+														},
+														"sink": {
+															"name": "Daily User Installs",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 8
+														},
+														"sink": {
+															"name": "Daily User Uninstalls",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 9
+														},
+														"sink": {
+															"name": "Active Device Installs",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 10
+														},
+														"sink": {
+															"name": "Install events",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 11
+														},
+														"sink": {
+															"name": "Update events",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"type": "String",
+															"ordinal": 12
+														},
+														"sink": {
+															"name": "Uninstall events",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"name": "W_BATCH_ID",
+															"type": "String"
+														},
+														"sink": {
+															"name": "W_BATCH_ID",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"name": "W_DATASOURCE_NAME",
+															"type": "String"
+														},
+														"sink": {
+															"name": "W_DATASOURCE_NAME",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"name": "W_UPDATE_DT",
+															"type": "String"
+														},
+														"sink": {
+															"name": "W_UPDATE_DT",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													},
+													{
+														"source": {
+															"name": "W_FILE_PATH",
+															"type": "String"
+														},
+														"sink": {
+															"name": "W_FILE_PATH",
+															"type": "String",
+															"physicalType": "nvarchar"
+														}
+													}
+												],
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "DC_CSV_Folder",
+												"type": "DatasetReference",
+												"parameters": {
+													"directory": "1",
+													"is_headers": false
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DC_azdcdb",
+												"type": "DatasetReference",
+												"parameters": {
+													"schema": {
+														"value": "@item().TARGET_SCHEMA",
+														"type": "Expression"
+													},
+													"table": {
+														"value": "@item().TARGET_TABLE",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "sde_with_header",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "DelimitedTextSource",
+												"additionalColumns": [
+													{
+														"name": "W_BATCH_ID",
+														"value": {
+															"value": "@pipeline().parameters.BATCH_ID",
+															"type": "Expression"
+														}
+													},
+													{
+														"name": "W_DATASOURCE_NAME",
+														"value": "CHP"
+													},
+													{
+														"name": "W_UPDATE_DT",
+														"value": {
+															"value": "@addhours(utcnow(),7)",
+															"type": "Expression"
+														}
+													},
+													{
+														"name": "W_FILE_PATH",
+														"value": "$$FILEPATH"
+													}
+												],
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true,
+													"wildcardFolderPath": {
+														"value": "@{item().PATH}",
+														"type": "Expression"
+													},
+													"wildcardFileName": {
+														"value": "@{item().SOURCE_TABLE}*.csv",
+														"type": "Expression"
+													},
+													"enablePartitionDiscovery": false
+												},
+												"formatSettings": {
+													"type": "DelimitedTextReadSettings",
+													"skipLineCount": 0
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink",
+												"preCopyScript": {
+													"value": "IF OBJECT_ID('@{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}') IS NOT NULL\n\tTRUNCATE TABLE @{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}",
+													"type": "Expression"
+												},
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false,
+												"tableOption": "autoCreate",
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "DC_CSV_Folder",
+												"type": "DatasetReference",
+												"parameters": {
+													"directory": "1",
+													"is_headers": true
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DC_azdcdb",
+												"type": "DatasetReference",
+												"parameters": {
+													"schema": {
+														"value": "@item().TARGET_SCHEMA",
+														"type": "Expression"
+													},
+													"table": {
+														"value": "@item().TARGET_TABLE",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "search_job",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[ADF].[proc_etl_get_job]",
+						"storedProcedureParameters": {
+							"group_name": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.GROUP_NAME",
+									"type": "Expression"
+								}
+							},
+							"group_number": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.GROUP_NUMBER",
+									"type": "Expression"
+								}
+							},
+							"p_batch_id": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.BATCH_ID",
+									"type": "Expression"
+								}
+							},
+							"p_job_group": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_GROUP",
+									"type": "Expression"
+								}
+							},
+							"p_job_id": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_ID",
+									"type": "Expression"
+								}
+							},
+							"p_job_sub_group": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_SUB_GROUP",
+									"type": "Expression"
+								}
+							},
+							"p_order": {
+								"type": "String",
+								"value": null
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DC_azdcdb",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "1",
+							"table": "1"
+						}
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
+		"parameters": {
+			"BATCH_ID": {
+				"type": "string",
+				"defaultValue": "1"
+			},
+			"JOB_ID": {
+				"type": "string",
+				"defaultValue": "ALL"
+			},
+			"JOB_GROUP": {
+				"type": "string",
+				"defaultValue": "CHP"
+			},
+			"JOB_SUB_GROUP": {
+				"type": "string",
+				"defaultValue": "SDE FACT"
+			},
+			"GROUP_NUMBER": {
+				"type": "string",
+				"defaultValue": "01"
+			},
+			"GROUP_NAME": {
+				"type": "string",
+				"defaultValue": "DRAGONX"
+			}
+		},
+		"variables": {
+			"a": {
+				"type": "Boolean"
+			}
+		},
+		"folder": {
+			"name": "DC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-31T06:59:45Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

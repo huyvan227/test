@@ -1,0 +1,17 @@
+{
+	"name": "Trigger_AdventureWorks",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-06-29T03:00:00",
+				"timeZone": "SE Asia Standard Time"
+			}
+		}
+	}
+}

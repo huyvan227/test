@@ -1,0 +1,34 @@
+{
+	"name": "src_saleslt_AdventureWork_datng",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADF_AdventureWork_Dat",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SCHEMA": {
+				"type": "string"
+			},
+			"SOURCE_TABLE": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_DN"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().SCHEMA",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().SOURCE_TABLE",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

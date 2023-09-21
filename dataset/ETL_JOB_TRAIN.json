@@ -1,0 +1,166 @@
+{
+	"name": "ETL_JOB_TRAIN",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adf_AdventureWork",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_anhle"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "JOB_ID",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "JOB_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_DESC",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_GROUP",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_SUB_GROUP",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_TYPE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_SCHEMA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SOURCE_TABLE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TARGET_SCHEMA",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TARGET_TABLE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "JOB_SCRIPT",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PRUNE_DAYS",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "FULL_LOAD_FLG",
+				"type": "char"
+			},
+			{
+				"name": "INCREMENTAL_CONDITION",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DATASOURCE_NUM_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ACTIVE_FLG",
+				"type": "char"
+			},
+			{
+				"name": "CREATED_TS",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "LAST_UPDATED_TS",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "LAST_EXTRACT_DATE",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "SHEET_NAME",
+				"type": "nvarchar"
+			},
+			{
+				"name": "IS_NO_HEADER",
+				"type": "char"
+			},
+			{
+				"name": "ORDER",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "GROUP_01",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_02",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_03",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_04",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_05",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_06",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_07",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_08",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_09",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_10",
+				"type": "nvarchar"
+			},
+			{
+				"name": "PATH",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "ADF",
+			"table": {
+				"value": "''",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

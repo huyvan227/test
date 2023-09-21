@@ -1,0 +1,97 @@
+{
+	"name": "pipeline3",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"additionalColumns": [
+							{
+								"name": "W_BATCH_ID",
+								"value": {
+									"value": "@pipeline().parameters.BATCH_ID",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "W_DATASOURCE_NAME",
+								"value": "SSC"
+							},
+							{
+								"name": "W_INSERT_DATE",
+								"value": {
+									"value": "@addhours(utcnow(),7)",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "FILE_PATH",
+								"value": "$$FILEPATH"
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DC_Json_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder": "A",
+							"file": "A"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DC_azdcdb",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "STG",
+							"table": "W_FS_SSC_FUND_PERFORMANCE"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"BATCH_ID": {
+				"type": "string",
+				"defaultValue": "1"
+			}
+		},
+		"folder": {
+			"name": "DC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-05T10:55:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

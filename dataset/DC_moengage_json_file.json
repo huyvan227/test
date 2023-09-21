@@ -1,0 +1,93 @@
+{
+	"name": "DC_moengage_json_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azdcdls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "moengage/now",
+				"fileSystem": "dcstorage"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"app_name": {
+					"type": "string"
+				},
+				"source": {
+					"type": "string"
+				},
+				"moe_request_id": {
+					"type": "string"
+				},
+				"events_event_name": {
+					"type": "string"
+				},
+				"events_event_code": {
+					"type": "string"
+				},
+				"events_event_uuid": {
+					"type": "string"
+				},
+				"events_event_time": {
+					"type": "integer"
+				},
+				"events_event_type": {
+					"type": "string"
+				},
+				"events_event_source": {
+					"type": "string"
+				},
+				"events_push_id": {
+					"type": "string"
+				},
+				"events_uid": {
+					"type": "string"
+				},
+				"events_event_attributes_campaign_id": {
+					"type": "string"
+				},
+				"events_event_attributes_campaign_name": {
+					"type": "string"
+				},
+				"events_event_attributes_campaign_type": {
+					"type": "string"
+				},
+				"events_event_attributes_campaign_channel": {
+					"type": "string"
+				},
+				"events_user_attributes_moengage_user_id": {
+					"type": "string"
+				},
+				"events_user_attributes_user_attr_1": {
+					"type": "string"
+				},
+				"events_user_attributes_user_attr_2": {
+					"type": "string"
+				},
+				"events_device_attributes_moengage_device_id": {
+					"type": "string"
+				},
+				"events_device_attributes_device_attr_1": {
+					"type": "string"
+				},
+				"events_device_attributes_device_attr_2": {
+					"type": "string"
+				},
+				"events_email_id": {
+					"type": "string"
+				},
+				"events_mobile_number": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,162 @@
+{
+	"name": "load_SIL_DIM",
+	"properties": {
+		"activities": [
+			{
+				"name": "get_job",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[ADF].[proc_etl_get_job_TL]",
+						"storedProcedureParameters": {
+							"group_name": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.GROUP_NAME",
+									"type": "Expression"
+								}
+							},
+							"group_number": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.GROUP_NUMBER",
+									"type": "Expression"
+								}
+							},
+							"p_batch_id": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.BATCH_ID",
+									"type": "Expression"
+								}
+							},
+							"p_job_group": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_GROUP",
+									"type": "Expression"
+								}
+							},
+							"p_job_id": {
+								"type": "String",
+								"value": ""
+							},
+							"p_job_sub_group": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_SUB_GROUP",
+									"type": "Expression"
+								}
+							},
+							"p_order": {
+								"type": "String",
+								"value": ""
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "etl_job_tl",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "get_job",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get_job').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "sil_dim",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": {
+									"value": "@item().JOB_SCRIPT",
+									"type": "Expression"
+								},
+								"storedProcedureParameters": {
+									"p_batch_id": {
+										"value": {
+											"value": "@item().JOB_ID",
+											"type": "Expression"
+										}
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ADF_AdventureWork_thuylinh",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"GROUP_NUMBER": {
+				"type": "string"
+			},
+			"GROUP_NAME": {
+				"type": "string"
+			},
+			"JOB_GROUP": {
+				"type": "string"
+			},
+			"JOB_SUB_GROUP": {
+				"type": "string",
+				"defaultValue": "SIL DIM"
+			},
+			"ORDER": {
+				"type": "string"
+			},
+			"BATCH_ID": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"JOB_SCRIPT": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_thuylinh"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-09T08:32:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,438 @@
+{
+	"name": "SDE_DIM",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Job",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[ADF].[proc_etl_get_job_train]",
+						"storedProcedureParameters": {
+							"group_name": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.GROUP_NAME",
+									"type": "Expression"
+								}
+							},
+							"group_number": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.GROUP_NUMBER",
+									"type": "Expression"
+								}
+							},
+							"p_batch_id": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.BATCH_ID",
+									"type": "Expression"
+								}
+							},
+							"p_job_group": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_GROUP",
+									"type": "Expression"
+								}
+							},
+							"p_job_id": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_ID",
+									"type": "Expression"
+								}
+							},
+							"p_job_sub_group": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.JOB_SUB_GROUP",
+									"type": "Expression"
+								}
+							},
+							"p_order": {
+								"type": "String",
+								"value": "1"
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ETL_JOB_TRAIN",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Job",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Job').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data from SalesLT",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "get_start_time",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"preCopyScript": {
+										"value": "IF OBJECT_ID('@{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}') IS NOT NULL\r\n\r\n  TRUNCATE TABLE @{item().TARGET_SCHEMA}.@{item().TARGET_TABLE}",
+										"type": "Expression"
+									},
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "src_SalesLT_AdventureWorks",
+									"type": "DatasetReference",
+									"parameters": {
+										"SCHEMA": {
+											"value": "@item().SOURCE_SCHEMA",
+											"type": "Expression"
+										},
+										"SOURCE_TABLE": {
+											"value": "@item().SOURCE_TABLE",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "tgt_STG_AdventureWorks",
+									"type": "DatasetReference",
+									"parameters": {
+										"SCHEMA": {
+											"value": "@item().TARGET_SCHEMA",
+											"type": "Expression"
+										},
+										"TARGET_TABLE": {
+											"value": "@item().TARGET_TABLE",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Stored procedure success",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "get_end_time",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[ADF].[proc_etl_job_tracking]",
+								"storedProcedureParameters": {
+									"p_batch_id": {
+										"value": {
+											"value": "@pipeline().parameters.BATCH_ID",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_duration": {
+										"value": {
+											"value": "@activity('Copy data from SalesLT').output.copyDuration",
+											"type": "Expression"
+										},
+										"type": "Decimal"
+									},
+									"p_end_time": {
+										"value": {
+											"value": "@variables('END')",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_error_message": {
+										"value": null,
+										"type": "String"
+									},
+									"p_job_group": {
+										"value": {
+											"value": "@item().JOB_GROUP",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_job_id": {
+										"value": {
+											"value": "@item().JOB_ID",
+											"type": "Expression"
+										},
+										"type": "Int64"
+									},
+									"p_job_name": {
+										"value": {
+											"value": "@item().JOB_NAME",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_job_sub_group": {
+										"value": {
+											"value": "@item().JOB_SUB_GROUP",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_start_time": {
+										"value": {
+											"value": "@variables('START')",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_status": {
+										"value": "Succeeded",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "adf_AdventureWork",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Stored procedure failed",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Copy data from SalesLT",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[ADF].[proc_etl_job_tracking]",
+								"storedProcedureParameters": {
+									"p_batch_id": {
+										"value": {
+											"value": "@pipeline().parameters.BATCH_ID",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_duration": {
+										"value": null,
+										"type": "Decimal"
+									},
+									"p_end_time": {
+										"value": null,
+										"type": "DateTime"
+									},
+									"p_error_message": {
+										"value": {
+											"value": "@activity('Copy data from SalesLT').output.errors[0].Message\n",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_job_group": {
+										"value": {
+											"value": "@item().JOB_GROUP",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_job_id": {
+										"value": {
+											"value": "@item().JOB_ID",
+											"type": "Expression"
+										},
+										"type": "Int64"
+									},
+									"p_job_name": {
+										"value": {
+											"value": "@item().JOB_NAME",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_job_sub_group": {
+										"value": {
+											"value": "@item().JOB_SUB_GROUP",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"p_start_time": {
+										"value": {
+											"value": "@variables('START')",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"p_status": {
+										"value": "failed",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "adf_AdventureWork",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "get_start_time",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "START",
+								"value": {
+									"value": "@convertTimeZone(utcnow(), 'UTC', 'SE Asia Standard Time')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "get_end_time",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Copy data from SalesLT",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "END",
+								"value": {
+									"value": "@convertTimeZone(utcnow(), 'UTC', 'SE Asia Standard Time')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"BATCH_ID": {
+				"type": "string"
+			},
+			"JOB_ID": {
+				"type": "string"
+			},
+			"JOB_SUB_GROUP": {
+				"type": "string",
+				"defaultValue": "SDE DIM"
+			},
+			"GROUP_NUMBER": {
+				"type": "string"
+			},
+			"GROUP_NAME": {
+				"type": "string"
+			},
+			"JOB_GROUP": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"START": {
+				"type": "String"
+			},
+			"END": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_anhle"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-25T02:38:16Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

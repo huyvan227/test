@@ -1,0 +1,384 @@
+{
+	"name": "Orders",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BlobHSX",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Prepayments_Flatted.json",
+				"container": "manageengine"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"OrderId": {
+					"type": "string"
+				},
+				"NumOrderId": {
+					"type": "integer"
+				},
+				"Processed": {
+					"type": "boolean"
+				},
+				"FulfilmentLocationId": {
+					"type": "string"
+				},
+				"GeneralInfo_Status": {
+					"type": "integer"
+				},
+				"GeneralInfo_LabelPrinted": {
+					"type": "boolean"
+				},
+				"GeneralInfo_LabelError": {
+					"type": "string"
+				},
+				"GeneralInfo_InvoicePrinted": {
+					"type": "boolean"
+				},
+				"GeneralInfo_PickListPrinted": {
+					"type": "boolean"
+				},
+				"GeneralInfo_IsRuleRun": {
+					"type": "boolean"
+				},
+				"GeneralInfo_Notes": {
+					"type": "integer"
+				},
+				"GeneralInfo_PartShipped": {
+					"type": "boolean"
+				},
+				"GeneralInfo_Marker": {
+					"type": "integer"
+				},
+				"GeneralInfo_IsParked": {
+					"type": "boolean"
+				},
+				"GeneralInfo_ReferenceNum": {
+					"type": "string"
+				},
+				"GeneralInfo_SecondaryReference": {
+					"type": "string"
+				},
+				"GeneralInfo_ExternalReferenceNum": {
+					"type": "string"
+				},
+				"GeneralInfo_ReceivedDate": {
+					"type": "string"
+				},
+				"GeneralInfo_Source": {
+					"type": "string"
+				},
+				"GeneralInfo_SubSource": {
+					"type": "string"
+				},
+				"GeneralInfo_HoldOrCancel": {
+					"type": "boolean"
+				},
+				"GeneralInfo_DespatchByDate": {
+					"type": "string"
+				},
+				"GeneralInfo_HasScheduledDelivery": {
+					"type": "boolean"
+				},
+				"GeneralInfo_Location": {
+					"type": "string"
+				},
+				"GeneralInfo_NumItems": {
+					"type": "integer"
+				},
+				"ShippingInfo_Vendor": {
+					"type": "string"
+				},
+				"ShippingInfo_PostalServiceId": {
+					"type": "string"
+				},
+				"ShippingInfo_PostalServiceName": {
+					"type": "string"
+				},
+				"ShippingInfo_TotalWeight": {
+					"type": "number"
+				},
+				"ShippingInfo_ItemWeight": {
+					"type": "number"
+				},
+				"ShippingInfo_PackageCategoryId": {
+					"type": "string"
+				},
+				"ShippingInfo_PackageCategory": {
+					"type": "string"
+				},
+				"ShippingInfo_PackageTypeId": {
+					"type": "string"
+				},
+				"ShippingInfo_PackageType": {
+					"type": "string"
+				},
+				"ShippingInfo_PostageCost": {
+					"type": "number"
+				},
+				"ShippingInfo_PostageCostExTax": {
+					"type": "number"
+				},
+				"ShippingInfo_TrackingNumber": {
+					"type": "string"
+				},
+				"ShippingInfo_ManualAdjust": {
+					"type": "boolean"
+				},
+				"CustomerInfo_ChannelBuyerName": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_EmailAddress": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_Address1": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_Address2": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_Address3": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_Town": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_Region": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_PostCode": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_Country": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_FullName": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_Company": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_PhoneNumber": {
+					"type": "string"
+				},
+				"CustomerInfo_Address_CountryId": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_EmailAddress": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_Address1": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_Address2": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_Address3": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_Town": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_Region": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_PostCode": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_Country": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_FullName": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_Company": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_PhoneNumber": {
+					"type": "string"
+				},
+				"CustomerInfo_BillingAddress_CountryId": {
+					"type": "string"
+				},
+				"TotalsInfo_Subtotal": {
+					"type": "number"
+				},
+				"TotalsInfo_PostageCost": {
+					"type": "number"
+				},
+				"TotalsInfo_PostageCostExTax": {
+					"type": "number"
+				},
+				"TotalsInfo_Tax": {
+					"type": "number"
+				},
+				"TotalsInfo_TotalCharge": {
+					"type": "number"
+				},
+				"TotalsInfo_PaymentMethod": {
+					"type": "string"
+				},
+				"TotalsInfo_PaymentMethodId": {
+					"type": "string"
+				},
+				"TotalsInfo_ProfitMargin": {
+					"type": "number"
+				},
+				"TotalsInfo_TotalDiscount": {
+					"type": "number"
+				},
+				"TotalsInfo_Currency": {
+					"type": "string"
+				},
+				"TotalsInfo_CountryTaxRate": {
+					"type": "number"
+				},
+				"TotalsInfo_ConversionRate": {
+					"type": "number"
+				},
+				"PaidDateTime": {
+					"type": "string"
+				},
+				"Items_ItemId": {
+					"type": "string"
+				},
+				"Items_ItemNumber": {
+					"type": "string"
+				},
+				"Items_SKU": {
+					"type": "string"
+				},
+				"Items_ItemSource": {
+					"type": "string"
+				},
+				"Items_Title": {
+					"type": "string"
+				},
+				"Items_Quantity": {
+					"type": "integer"
+				},
+				"Items_CategoryName": {
+					"type": "string"
+				},
+				"Items_StockLevelsSpecified": {
+					"type": "boolean"
+				},
+				"Items_OnOrder": {
+					"type": "integer"
+				},
+				"Items_Level": {
+					"type": "integer"
+				},
+				"Items_AvailableStock": {
+					"type": "integer"
+				},
+				"Items_PricePerUnit": {
+					"type": "number"
+				},
+				"Items_UnitCost": {
+					"type": "number"
+				},
+				"Items_DespatchStockUnitCost": {
+					"type": "number"
+				},
+				"Items_Discount": {
+					"type": "number"
+				},
+				"Items_Tax": {
+					"type": "number"
+				},
+				"Items_TaxRate": {
+					"type": "number"
+				},
+				"Items_Cost": {
+					"type": "number"
+				},
+				"Items_CostIncTax": {
+					"type": "number"
+				},
+				"Items_IsService": {
+					"type": "boolean"
+				},
+				"Items_SalesTax": {
+					"type": "number"
+				},
+				"Items_TaxCostInclusive": {
+					"type": "boolean"
+				},
+				"Items_PartShipped": {
+					"type": "boolean"
+				},
+				"Items_Weight": {
+					"type": "number"
+				},
+				"Items_BarcodeNumber": {
+					"type": "string"
+				},
+				"Items_Market": {
+					"type": "integer"
+				},
+				"Items_ChannelSKU": {
+					"type": "string"
+				},
+				"Items_ChannelTitle": {
+					"type": "string"
+				},
+				"Items_DiscountValue": {
+					"type": "number"
+				},
+				"Items_HasImage": {
+					"type": "boolean"
+				},
+				"Items_StockLevelIndicator": {
+					"type": "integer"
+				},
+				"Items_ShippingCost": {
+					"type": "number"
+				},
+				"Items_PartShippedQty": {
+					"type": "integer"
+				},
+				"Items_BatchNumberScanRequired": {
+					"type": "boolean"
+				},
+				"Items_SerialNumberScanRequired": {
+					"type": "boolean"
+				},
+				"Items_BinRack": {
+					"type": "string"
+				},
+				"Items_InventoryTrackingType": {
+					"type": "integer"
+				},
+				"Items_isBatchedStockItem": {
+					"type": "boolean"
+				},
+				"Items_IsWarehouseManaged": {
+					"type": "boolean"
+				},
+				"Items_IsUnlinked": {
+					"type": "boolean"
+				},
+				"Items_StockItemIntId": {
+					"type": "integer"
+				},
+				"Items_RowId": {
+					"type": "string"
+				},
+				"Items_OrderId": {
+					"type": "string"
+				},
+				"Items_StockItemId": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

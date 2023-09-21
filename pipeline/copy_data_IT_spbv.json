@@ -1,0 +1,788 @@
+{
+	"name": "copy_data_IT_spbv",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ExcelSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"preCopyScript": {
+							"value": "IF OBJECT_ID('[dbo].[DEVICES_DETAIL]') IS NOT NULL\n\n  TRUNCATE TABLE [dbo].[DEVICES_DETAIL]",
+							"type": "Expression"
+						},
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "name",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "host",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "host",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "domain",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "domain",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "created",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "created",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "modified",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "modified",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_ver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_ver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_name",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_type",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_type",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_64_bit",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_64_bit",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_lang",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_lang",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_major_ver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_major_ver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_minor_ver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_minor_ver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_sp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_sp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_tz_offset",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_tz_offset",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_user",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_user",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_user_domain",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_user_domain",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_vol_avail_mb",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_vol_avail_mb",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_vol_cap_mb",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_vol_cap_mb",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_uuid",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_uuid",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_bios_ver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_bios_ver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_cpu_mhz",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_cpu_mhz",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_cpu_type",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_cpu_type",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_log_cpus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_log_cpus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_mem_mb",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_mem_mb",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_model_vendor",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_model_vendor",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_serial",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_serial",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "adapters",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "adapters",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "is_virtual",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "is_virtual",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "dns_names",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "dns_names",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "parent_device_group_id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "parent_device_group_id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "parent_device_group_name",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "parent_device_group_name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "device_status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "device_status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "connection_status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "connection_status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_name",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_version",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_version",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_last_connected_time",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_last_connected_time",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_latest_policies_applied",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_latest_policies_applied",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_product_status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_product_status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_name",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_security_status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_security_status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_engine_version",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_engine_version",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_content_version",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_content_version",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_content_last_download_time",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_content_last_download_time",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_data_has_unresolved_threats",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_data_has_unresolved_threats",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_data_unresolved_threats",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_data_unresolved_threats",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "fault",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "fault",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_build_ver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_build_ver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_revision_ver",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_revision_ver",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os_product_type",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os_product_type",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw_phys_cpus",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw_phys_cpus",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_product_status_reason",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_product_status_reason",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "os",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "os",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "hw",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "hw",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "fault_faultstring",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "fault_faultstring",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "fault_detail_errorcode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "fault_detail_errorcode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features_feature_status_reason",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features_feature_status_reason",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "products_features",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "products_features",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_blob_exc_src",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_db_spbv_tgt",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "ADF_AdventureWork_anhle"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-08T04:50:14Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

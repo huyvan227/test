@@ -1,0 +1,68 @@
+{
+	"name": "Demo load data table customer",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy table Customer from SalesLT to STG",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "src_saleslt_AdventureWork_datng",
+						"type": "DatasetReference",
+						"parameters": {
+							"SCHEMA": "SalesLT",
+							"SOURCE_TABLE": "ProductModel"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "tgt_stg_AdventureWork_datng",
+						"type": "DatasetReference",
+						"parameters": {
+							"SCHEMA": "STG",
+							"TARGET_TABLE": "STG.W_DS_CUSTOMER_ngdat"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "ADF_AdventureWork_ngdat"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-27T15:07:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

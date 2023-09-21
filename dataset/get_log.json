@@ -1,0 +1,65 @@
+{
+	"name": "get_log",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adf_AdventureWork",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_anhle"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "LOG_ID",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "BATCH_ID",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "JOB_ID",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "LOG_STATUS",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LOG_MESSAGE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ERROR_CODE",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "ERROR_MESSAGE",
+				"type": "nvarchar"
+			},
+			{
+				"name": "CREATED_TS",
+				"type": "date"
+			},
+			{
+				"name": "GROUP",
+				"type": "nvarchar"
+			},
+			{
+				"name": "GROUP_NAME",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "ADF",
+			"table": "ETL_LOG_TRAIN"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,17 @@
+{
+	"name": "tgt_JSON_TARGET_STG",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "JSON2STG",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "STG",
+			"table": "W_FS_HXE_PREPAYMENTS"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

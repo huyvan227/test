@@ -1,0 +1,63 @@
+{
+	"name": "pl_SalesForce2STG",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy SalesForce2STG",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceSource",
+						"readBehavior": "query"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SalesforceObject",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SqlServerTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TABLE_NAME": "W_SSG_SF_SALES_TARGET_D",
+							"SCHEMA": "STG"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SS Group"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-09T09:34:58Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

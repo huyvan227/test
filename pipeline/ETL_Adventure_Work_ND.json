@@ -1,0 +1,148 @@
+{
+	"name": "ETL_Adventure_Work_ND",
+	"properties": {
+		"activities": [
+			{
+				"name": "SDE_FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Get_batch_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Load_FACT_from_SalesLT_to_STG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@activity('Get_batch_id').output.firstRow.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SDE_DIM",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SDE_FACT",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Load_DIM_from_SalesLT_to_STG",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@activity('Get_batch_id').output.firstRow.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SIL_DIM",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SDE_DIM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Load_data_DIM_From_STG_to_DWH",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SIL_FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SIL_DIM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Load_data_Fact_From_STG_to_DWH",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Get_batch_id",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[ADF].[proc_etl_get_batch_id_ND]",
+						"storedProcedureParameters": {
+							"p_batch_id": {
+								"type": "String",
+								"value": null
+							},
+							"p_batch_type_id": {
+								"type": "Int32",
+								"value": null
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ADF_AdventureWork_ND",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"BATCH_ID": {
+				"type": "String"
+			},
+			"BATCH_TYPE_ID": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_ngdat"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-31T23:10:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

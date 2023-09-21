@@ -1,0 +1,34 @@
+{
+	"name": "ds_tgt_stg_adventurework_tl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADF_AdventureWork_thuylinh",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TARGET": {
+				"type": "string"
+			},
+			"TARGET_TABLE": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_thuylinh"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().TARGET",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TARGET_TABLE",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,339 @@
+{
+	"name": "Ending_Price",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_Acterys",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ADF_Acterys"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "ending_price_modified .xlsx",
+				"folderPath": "src",
+				"container": "datnguyen-training"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Material",
+				"type": "String"
+			},
+			{
+				"name": "Material Number                        ",
+				"type": "String"
+			},
+			{
+				"name": "Plnt",
+				"type": "String"
+			},
+			{
+				"name": "Plant                ",
+				"type": "String"
+			},
+			{
+				"name": "MTyp",
+				"type": "String"
+			},
+			{
+				"name": "Material type ",
+				"type": "String"
+			},
+			{
+				"name": "BUn",
+				"type": "String"
+			},
+			{
+				"name": "Product hierarchy ",
+				"type": "String"
+			},
+			{
+				"name": "Product hierarchy",
+				"type": "String"
+			},
+			{
+				"name": "Matl Group",
+				"type": "String"
+			},
+			{
+				"name": "Material Group",
+				"type": "String"
+			},
+			{
+				"name": "Profit Ctr",
+				"type": "String"
+			},
+			{
+				"name": "ValCl",
+				"type": "String"
+			},
+			{
+				"name": "Valuation Class  ",
+				"type": "String"
+			},
+			{
+				"name": "Concentrate",
+				"type": "String"
+			},
+			{
+				"name": "            Sugar",
+				"type": "String"
+			},
+			{
+				"name": "           HFCS",
+				"type": "String"
+			},
+			{
+				"name": "      CO2 / N2",
+				"type": "String"
+			},
+			{
+				"name": "         Other RM",
+				"type": "String"
+			},
+			{
+				"name": "      Cans/Bottle",
+				"type": "String"
+			},
+			{
+				"name": "      Closures",
+				"type": "String"
+			},
+			{
+				"name": "         Labels",
+				"type": "String"
+			},
+			{
+				"name": "        Cartons",
+				"type": "String"
+			},
+			{
+				"name": "    Shrink wrap",
+				"type": "String"
+			},
+			{
+				"name": "     Other PM",
+				"type": "String"
+			},
+			{
+				"name": "       Non-BOM",
+				"type": "String"
+			},
+			{
+				"name": "   Direct Labor",
+				"type": "String"
+			},
+			{
+				"name": "      Utilities",
+				"type": "String"
+			},
+			{
+				"name": "        Copacking",
+				"type": "String"
+			},
+			{
+				"name": "    Other VMOH",
+				"type": "String"
+			},
+			{
+				"name": " Indirect Labor",
+				"type": "String"
+			},
+			{
+				"name": "   Depreciation",
+				"type": "String"
+			},
+			{
+				"name": " Other FMOH OPS",
+				"type": "String"
+			},
+			{
+				"name": " Other FMOH SC",
+				"type": "String"
+			},
+			{
+				"name": "   SC Overhead",
+				"type": "String"
+			},
+			{
+				"name": "   SD Warehouse",
+				"type": "String"
+			},
+			{
+				"name": "Pri. Transportation",
+				"type": "String"
+			},
+			{
+				"name": "       Total value",
+				"type": "String"
+			},
+			{
+				"name": "    Quantity",
+				"type": "String"
+			},
+			{
+				"name": "0: no ending bal, \n1: available ending bal",
+				"type": "String"
+			},
+			{
+				"name": "String code",
+				"type": "String"
+			},
+			{
+				"name": "SKU name",
+				"type": "String"
+			},
+			{
+				"name": "RM",
+				"type": "String"
+			},
+			{
+				"name": "PM",
+				"type": "String"
+			},
+			{
+				"name": "VMC",
+				"type": "String"
+			},
+			{
+				"name": "FMC OPS",
+				"type": "String"
+			},
+			{
+				"name": "FMC SC",
+				"type": "String"
+			},
+			{
+				"name": "SC OVH",
+				"type": "String"
+			},
+			{
+				"name": "SC WH",
+				"type": "String"
+			},
+			{
+				"name": "Primary",
+				"type": "String"
+			},
+			{
+				"name": "Total",
+				"type": "String"
+			},
+			{
+				"name": "Check",
+				"type": "String"
+			},
+			{
+				"name": "Sales volume",
+				"type": "String"
+			},
+			{
+				"name": "Sales volume - Converted",
+				"type": "String"
+			},
+			{
+				"name": "EB - Converted",
+				"type": "String"
+			},
+			{
+				"name": "Concentrate New",
+				"type": "String"
+			},
+			{
+				"name": "            Sugar New",
+				"type": "String"
+			},
+			{
+				"name": "           HFCS New",
+				"type": "String"
+			},
+			{
+				"name": "      CO2 / N2 New",
+				"type": "String"
+			},
+			{
+				"name": "         Other RM New",
+				"type": "String"
+			},
+			{
+				"name": "      Cans/Bottle New",
+				"type": "String"
+			},
+			{
+				"name": "      Closures New",
+				"type": "String"
+			},
+			{
+				"name": "         Labels New",
+				"type": "String"
+			},
+			{
+				"name": "        Cartons New",
+				"type": "String"
+			},
+			{
+				"name": "    Shrink wrap New",
+				"type": "String"
+			},
+			{
+				"name": "     Other PM New",
+				"type": "String"
+			},
+			{
+				"name": "       Non-BOM New",
+				"type": "String"
+			},
+			{
+				"name": "   Direct Labor New",
+				"type": "String"
+			},
+			{
+				"name": "      Utilities New",
+				"type": "String"
+			},
+			{
+				"name": "        Copacking New",
+				"type": "String"
+			},
+			{
+				"name": "    Other VMOH New",
+				"type": "String"
+			},
+			{
+				"name": " Indirect Labor New",
+				"type": "String"
+			},
+			{
+				"name": "   Depreciation New",
+				"type": "String"
+			},
+			{
+				"name": " Other FMOH OPS New",
+				"type": "String"
+			},
+			{
+				"name": " Other FMOH SC New",
+				"type": "String"
+			},
+			{
+				"name": "   SC Overhead New",
+				"type": "String"
+			},
+			{
+				"name": "   SD Warehouse New",
+				"type": "String"
+			},
+			{
+				"name": "Pri. Transportation New",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

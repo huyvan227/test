@@ -1,0 +1,21 @@
+{
+	"name": "OData_inked_service_sales_order",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "OData",
+		"typeProperties": {
+			"url": "https://my354314.sapbydesign.com/sap/byd/odata/cust/v1/salesorder4pbi",
+			"authenticationType": "Basic",
+			"userName": "admin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_SnS",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "SAPUser"
+			}
+		}
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"name": "SalesforceObject",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Salesforce_linked_service",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SS Group Dataset"
+		},
+		"annotations": [],
+		"type": "SalesforceObject",
+		"schema": [],
+		"typeProperties": {
+			"objectApiName": "Sales_Target__c"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

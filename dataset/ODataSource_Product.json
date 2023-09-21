@@ -1,0 +1,19 @@
+{
+	"name": "ODataSource_Product",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OData_linked_service_Product",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SS Group Dataset"
+		},
+		"annotations": [],
+		"type": "ODataResource",
+		"schema": [],
+		"typeProperties": {
+			"path": "MaterialCollection"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

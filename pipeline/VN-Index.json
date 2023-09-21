@@ -1,0 +1,86 @@
+{
+	"name": "VN-Index",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"additionalColumns": [
+							{
+								"name": "W_BATCH_ID",
+								"value": "1"
+							},
+							{
+								"name": "W_DATASOURCE_NAME",
+								"value": "VN-INDEX"
+							},
+							{
+								"name": "W_INSERT_DATE",
+								"value": {
+									"value": "@addhours(utcnow(),7)",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "W_FILE_PATH",
+								"value": "$$FILEPATH"
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "vn-index",
+							"wildcardFileName": "*.json",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DC_VN_Index_json",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DC_azdcdb",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "STG",
+							"table": "W_FS_VN_INDEX_DC"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "DC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-20T16:11:39Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

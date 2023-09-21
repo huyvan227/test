@@ -1,0 +1,77 @@
+{
+	"name": "ssc_sde_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "ssc_sde_fact",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "ssc_sde",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@pipeline().parameters.BATCH_ID",
+							"type": "Expression"
+						},
+						"MONTH": {
+							"value": "@pipeline().parameters.MONTH",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "ssc_sil_fact",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ssc_sde_fact",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "sil",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@pipeline().parameters.BATCH_ID",
+							"type": "Expression"
+						},
+						"JOB_ID": "ALL",
+						"JOB_GROUP": "SSC",
+						"JOB_SUB_GROUP": "SIL FACT",
+						"GROUP_NUMBER": "01",
+						"GROUP_NAME": "DRAGONX"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"BATCH_ID": {
+				"type": "string",
+				"defaultValue": "1"
+			},
+			"MONTH": {
+				"type": "string",
+				"defaultValue": "2023-07"
+			}
+		},
+		"folder": {
+			"name": "DC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-05T11:43:43Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

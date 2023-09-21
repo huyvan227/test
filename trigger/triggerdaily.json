@@ -1,0 +1,24 @@
+{
+	"name": "triggerdaily",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "dm1_pl_copy_csv_from_Blob_to_sql",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 24,
+				"startTime": "2023-05-16T06:00:00",
+				"timeZone": "SE Asia Standard Time"
+			}
+		}
+	}
+}

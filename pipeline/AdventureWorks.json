@@ -1,0 +1,300 @@
+{
+	"name": "AdventureWorks",
+	"properties": {
+		"activities": [
+			{
+				"name": "SDE_FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "get_batch_id",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SDE_FACT",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@activity('get_batch_id').output.firstRow.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SDE_DIM",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SDE_FACT",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SDE_DIM",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@activity('get_batch_id').output.firstRow.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SIL_PLP_DIM",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SDE_DIM",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "DIM_STG_DWH_PLP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@activity('get_batch_id').output.firstRow.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "SIL_PLP_FACT",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "SIL_PLP_DIM",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "FACT_STG_DWH_PLP",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"BATCH_ID": {
+							"value": "@activity('get_batch_id').output.firstRow.BATCH_ID",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "get_batch_id",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderStoredProcedureName": "[ADF].[proc_etl_get_batch_id_TRAIN]",
+						"storedProcedureParameters": {
+							"p_batch_id": {
+								"type": "String",
+								"value": null
+							},
+							"p_batch_type_id": {
+								"type": "Int32",
+								"value": null
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlServerTable2",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "''"
+						}
+					}
+				}
+			},
+			{
+				"name": "Azure Function1",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "Filter_succeeded",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Filter_failed",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "send_email",
+					"method": "POST",
+					"body": {
+						"value": "@concat(\n  '{\n  \"Username\" : \"31201020734@ueh.edu.vn\",\n  \"Password\": \"Ueh@281259257\",\n  \"Subject\": \"Send Notification About Pipeline ',utcNow(), '\",\n  \"From\": \"31201020734@ueh.edu.vn\",\n  \"To\": \"thaoanh0710@gmail.com\",\n  \"text_succeeded\": ', activity('Filter_succeeded').output.value, ',',\n  '\"text_failed\": ', activity('Filter_failed').output.value, '}'\n)",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureFunction",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "get log",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "waiting_record_log",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": {
+							"value": "@concat(\n'SELECT   *\n  FROM [ADF].[ETL_JOB_TRACKING]\n  WHERE [BATCH_ID] = ''' , activity('get_batch_id').output.firstRow.BATCH_ID,''''\n)",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "get_log",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "waiting_record_log",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "SIL_PLP_FACT",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 90
+				}
+			},
+			{
+				"name": "Filter_succeeded",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "get log",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get log').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().STATUS, 'Succeeded')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Filter_failed",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "get log",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('get log').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(equals(item().STATUS, 'Succeeded'))",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"concurrency": 2,
+		"variables": {
+			"BATCH_ID": {
+				"type": "String"
+			},
+			"ERROR_MESSAGE": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ADF_AdventureWork_anhle"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-10T10:58:05Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

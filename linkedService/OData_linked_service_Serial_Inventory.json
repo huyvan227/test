@@ -1,0 +1,21 @@
+{
+	"name": "OData_linked_service_Serial_Inventory",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "OData",
+		"typeProperties": {
+			"url": "https://my354314.sapbydesign.com/sap/byd/odata/cust/v1/serialinventory4pbi",
+			"authenticationType": "Basic",
+			"userName": "admin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AKV_SnS",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "SAPUser"
+			}
+		}
+	}
+}

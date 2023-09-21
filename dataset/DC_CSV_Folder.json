@@ -1,0 +1,89 @@
+{
+	"name": "DC_CSV_Folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azdcdls",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"directory": {
+				"type": "string"
+			},
+			"is_headers": {
+				"type": "Bool",
+				"defaultValue": true
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().directory",
+					"type": "Expression"
+				},
+				"fileSystem": "dcstorage"
+			},
+			"columnDelimiter": ",",
+			"rowDelimiter": "\n",
+			"escapeChar": "\\",
+			"firstRowAsHeader": {
+				"value": "@dataset().is_headers",
+				"type": "Expression"
+			},
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Date",
+				"type": "String"
+			},
+			{
+				"name": "Package Name",
+				"type": "String"
+			},
+			{
+				"name": "Daily Device Installs",
+				"type": "String"
+			},
+			{
+				"name": "Daily Device Uninstalls",
+				"type": "String"
+			},
+			{
+				"name": "Daily Device Upgrades",
+				"type": "String"
+			},
+			{
+				"name": "Total User Installs",
+				"type": "String"
+			},
+			{
+				"name": "Daily User Installs",
+				"type": "String"
+			},
+			{
+				"name": "Daily User Uninstalls",
+				"type": "String"
+			},
+			{
+				"name": "Active Device Installs",
+				"type": "String"
+			},
+			{
+				"name": "Install events",
+				"type": "String"
+			},
+			{
+				"name": "Update events",
+				"type": "String"
+			},
+			{
+				"name": "Uninstall events",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

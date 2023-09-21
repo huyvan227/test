@@ -1,0 +1,95 @@
+{
+	"name": "dm3_store_procedure",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata Last Modified Date",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "InternetSale",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"lastModified",
+						"size",
+						"itemName"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "InsertLastModified",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata Last Modified Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_InsertLastModifiedDate]",
+					"storedProcedureParameters": {
+						"FileName": {
+							"value": {
+								"value": "@activity('Get Metadata Last Modified Date').output.itemName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"ModifiedDate": {
+							"value": {
+								"value": "@activity('Get Metadata Last Modified Date').output.lastModified",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						},
+						"RecordInsertDate": {
+							"value": {
+								"value": "@utcnow()",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "internetsaledb",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "internetSale"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-17T06:51:04Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

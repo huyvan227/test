@@ -1,0 +1,22 @@
+{
+	"name": "ds_blob_exc_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "link__adworks_storage_anhle_training",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet2",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Devices_Detail.xlsx",
+				"container": "anhle-training"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

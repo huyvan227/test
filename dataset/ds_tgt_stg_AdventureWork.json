@@ -1,0 +1,34 @@
+{
+	"name": "ds_tgt_stg_AdventureWork",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linked_service_adventure_work",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SCHEMA": {
+				"type": "string"
+			},
+			"TARGET_TABLE": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "AdventureWork"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().SCHEMA",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TARGET_TABLE",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

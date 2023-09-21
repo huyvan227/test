@@ -1,0 +1,34 @@
+{
+	"name": "test",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-10.southeastasia.logic.azure.com:443/workflows/b53099ccee4e4b71b90892f918125a5b/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Y24oeYstMI3WAShkJTMMb3GVkbY_JXVEXktQa0eLTwg",
+					"method": "POST",
+					"body": {
+						"value": "{\n    \"start_time\":\"2023-01-01T00:00:00Z\",\n    \"end_time\":\"2023-09-06T00:00:00Z\"\n}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "DC"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-09-07T07:11:04Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

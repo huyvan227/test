@@ -1,0 +1,12 @@
+{
+	"name": "SmartSales_DMS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "PostgreSql",
+		"typeProperties": {
+			"connectionString": "host=smartsales-db-replica-prod.cfsacd8e4ibr.ap-southeast-1.rds.amazonaws.com;port=5432;database=postgres;uid=dms;encryptionmethod=0",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDAxMThFOTAwLTgwMEEtNDNERi1BM0JELTk5MEEzREVDMTc2Q18wMTlkNTc5NC0zZGFjLTQwYzEtYmViMS0xZTIwYWE5ZWUzY2MiDQp9"
+		}
+	}
+}

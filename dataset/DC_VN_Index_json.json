@@ -1,0 +1,33 @@
+{
+	"name": "DC_VN_Index_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azdcdls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "VN_Index_2023-01-01_to_2023-07-31.json",
+				"fileSystem": "vn-index"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"index": {
+					"type": "string"
+				},
+				"amount": {
+					"type": "number"
+				},
+				"date": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

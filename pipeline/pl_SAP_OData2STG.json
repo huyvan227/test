@@ -1,0 +1,55 @@
+{
+	"name": "pl_SAP_OData2STG",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ODataSource",
+						"httpRequestTimeout": "00:05:00"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "ODataSource_Sales_Order",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SqlServerTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"TABLE_NAME": "W_SSG_SAP_SERIAL_IVENTORY_ITEM_COLLECTION_F",
+							"SCHEMA": "STG"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "SS Group"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-09T10:02:03Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

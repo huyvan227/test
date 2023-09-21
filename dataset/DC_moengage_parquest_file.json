@@ -1,0 +1,21 @@
+{
+	"name": "DC_moengage_parquest_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "azdcdls",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "moengage/now",
+				"fileSystem": "dcstorage"
+			},
+			"compressionCodec": "none"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

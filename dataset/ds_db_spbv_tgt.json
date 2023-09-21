@@ -1,0 +1,17 @@
+{
+	"name": "ds_db_spbv_tgt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adf_AdventureWork",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DEVICES_DETAIL"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

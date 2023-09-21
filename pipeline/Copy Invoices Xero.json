@@ -1,0 +1,123 @@
+{
+	"name": "Copy Invoices Xero",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data Blob2DWH",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Azure Function Xero Api",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"additionalColumns": [
+							{
+								"name": "W_BATCH_ID",
+								"value": {
+									"value": "@pipeline().parameters.W_BATCH_ID",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "W_INSERT_DATE",
+								"value": {
+									"value": "@addhours(utcnow(),7)",
+									"type": "Expression"
+								}
+							},
+							{
+								"name": "W_FILE_PATH",
+								"value": "$$FILEPATH"
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "invoices",
+							"wildcardFileName": "Invoices*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table [stg].[xer_fs_invoices]",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "embedappstorage",
+						"type": "DatasetReference",
+						"parameters": {
+							"folder": "''",
+							"file": "''"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "tcwebappdb",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "stg",
+							"name": "xer_fs_invoices"
+						}
+					}
+				]
+			},
+			{
+				"name": "Azure Function Xero Api",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": "getInvoicesXero",
+					"method": "GET"
+				},
+				"linkedServiceName": {
+					"referenceName": "XeroFun",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"parameters": {
+			"W_BATCH_ID": {
+				"type": "string",
+				"defaultValue": "1"
+			}
+		},
+		"folder": {
+			"name": "Xero"
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-04-07T15:08:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

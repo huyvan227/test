@@ -1,0 +1,19 @@
+{
+	"name": "ODataResource_OTCS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OData_linked_service_OTCS",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SS Group Dataset"
+		},
+		"annotations": [],
+		"type": "ODataResource",
+		"schema": [],
+		"typeProperties": {
+			"path": "CustomerInvoiceRequestCustomerInvoiceRequestAccountsReceivableDueItemTypeCodeCollection"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
